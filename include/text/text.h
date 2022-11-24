@@ -1,6 +1,20 @@
 #ifndef TEXT_LIB_H
 #define TEXT_LIB_H
+#include <stdint.h>
+
+typedef struct {
+  char* left;
+  char* right;
+} TextSlice;
+
 
 int text_append(char **inputstr, const char *other);
+
+
+int text_slice_at(const char* str, uint64_t pos, TextSlice* slice);
+
+char* text_replace(const char* str, const char* pattern,
+                         const char* repl);
+
 
 #endif
