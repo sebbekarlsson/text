@@ -87,7 +87,21 @@ char* text_replace(const char *str, const char *pattern,
     slice.right = 0;
   }
 
-
-
   return new_str;
+}
+
+int text_replace_char(char** str, char pattern, char repl) {
+  if (!str || !pattern || !repl) return 0;
+  char* value = *str;
+  if (!value) return 0;
+  int64_t len = strlen(value);
+  if (len <= 0) return 0;
+
+  for (int64_t i = 0; i < len; i++) {
+    char c = value[i];
+    if (c != pattern) continue;
+    value[i] = repl;
+  }
+
+  return 1;
 }
