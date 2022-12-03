@@ -105,3 +105,83 @@ int text_replace_char(char** str, char pattern, char repl) {
 
   return 1;
 }
+
+int64_t text_count_lines(const char* str) {
+  if (!str) return 0;
+
+  int64_t lines = 0;
+  int64_t len = strlen(str);
+
+
+
+  for (int64_t i = 0; i < len; i++) {
+    char c = str[i];
+
+    lines += (int64_t)(c == '\n');
+  }
+
+  return lines;
+}
+
+
+void text_shift_right(char* str, int64_t len, char c) {
+  for (int64_t i = len-1; i > 0; i--) {
+    str[i] = str[i-1];
+  }
+
+  str[0] = c;
+}
+
+int64_t text_get_line_length(char* line) {
+  if (!line) return 0;
+  int64_t line_len = 0;
+  int64_t len = strlen(line);
+
+
+  for (int64_t i = 0; i < len; i++) {
+    if (line[i] == '\n') break;
+    line_len++;
+  }
+
+  return line_len;
+}
+
+int text_with_line_numbers(char** str) {
+  if (!str) return 0;
+  char* value = *str;
+  if (!value) return 0;
+
+  int64_t lines = text_count_lines(value);
+  if (lines <= 0) return 0;
+
+  char* next_str = 0;
+  char* ptr = &value[0];
+
+  for (int64_t i = 0; i < lines; i++) {
+    int64_t line_len = text_get_line_length(ptr);
+
+    char line_str[256];
+    sprintf(line_str, "%ld ", 1+i);
+    text_append(&next_str, line_str);
+
+    if (line_len > 0) {
+      char* linebuff = (char*)calloc(line_len + 1, sizeof(char));
+      memcpy(&linebuff[0], &ptr[0], line_len * sizeof(char));
+      text_append(&next_str, linebuff);
+      free(linebuff);
+      linebuff = 0;
+    }
+
+    text_append(&next_str, "\n");
+
+
+    ptr += line_len+1;
+    if (ptr == 0 || (*ptr) == 0) break;
+  }
+
+  if (next_str != 0) {
+    free(*str);
+    *str = next_str;
+  }
+  return 1;
+}

@@ -18,4 +18,10 @@ char* text_replace(const char* str, const char* pattern,
 
 int text_replace_char(char** str, char pattern, char repl);
 
+
+int text_with_line_numbers(char** str);
+
+int64_t text_count_lines(const char* str);
+void text_shift_right(char* str, int64_t len, char c);
+
 #endif
