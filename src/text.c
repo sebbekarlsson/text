@@ -185,3 +185,39 @@ int text_with_line_numbers(char** str) {
   }
   return 1;
 }
+
+static bool text_compare_fuzzy_private(const char* a, const char* b) {
+  if (a == b) return true;
+  if (!a || !b) return false;
+  if (strstr(a, b) || strstr(b, a)) return true;
+  if (strcasecmp(a, b) == 0) return true;
+
+  size_t a_len = strlen(a);
+  size_t b_len = strlen(b);
+  size_t len = MAX(a_len, b_len);
+
+  if (len >= 1024) return false;
+
+
+
+  int64_t idx = 0;
+  char c = a[idx];
+  while (idx < a_len && c != 0) {
+    while (c == ' ') {
+      c = a[++idx];
+    }
+    char tmp[b_len+1];
+    memset(&tmp[0], 0, b_len+1);
+    memcpy(&tmp[0], &a[idx], MIN(b_len, a_len-idx));
+    if (strcasecmp(tmp, b) == 0) return true;
+    c = a[++idx];
+  }
+
+
+  return false;
+}
+
+bool text_compare_fuzzy(const char* a, const char* b) {
+  if (text_compare_fuzzy_private(a, b)) return true;
+  return text_compare_fuzzy_private(b, a);
+}
