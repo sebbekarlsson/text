@@ -8,6 +8,19 @@ typedef struct {
   char* right;
 } TextSlice;
 
+#define TEXT_VIEW_CAP 128
+
+typedef struct {
+  char tmp[TEXT_VIEW_CAP];
+  const char* ptr;
+  int64_t length;
+} TextView;
+
+const char *text_view_get_value(TextView *view);
+
+void text_view_clear(TextView* view);
+
+int text_split(const char* src, char delim, TextView* out, int64_t* out_length);
 
 int text_append(char **inputstr, const char *other);
 

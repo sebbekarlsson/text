@@ -221,3 +221,50 @@ bool text_compare_fuzzy(const char* a, const char* b) {
   if (text_compare_fuzzy_private(a, b)) return true;
   return text_compare_fuzzy_private(b, a);
 }
+
+const char *text_view_get_value(TextView *view) {
+  if (!view || view->ptr == 0 || view->length <= 0) return 0;
+  memset(&view->tmp, 0, TEXT_VIEW_CAP * sizeof(char));
+  memcpy(&view->tmp[0], view->ptr, view->length * sizeof(char));
+  return view->tmp;
+}
+
+void text_view_clear(TextView *view) {
+  if (!view) return;
+  memset(&view->tmp, 0, TEXT_VIEW_CAP * sizeof(char));
+  view->ptr = 0;
+  view->length = 0;
+}
+
+int text_split(const char* src, char delim, TextView* out, int64_t* out_length) {
+  if (!src || !out || !out_length || !delim) return 0;
+
+
+  TextView current = {0};
+  text_view_clear(&current);
+  current.ptr = src;
+
+  int64_t len = strlen(src);
+  int64_t i = 0;
+  char c = src[i];
+
+  int64_t count = 0;
+
+  while (c != 0 && i < len) {
+    c = src[i];
+    text_view_clear(&current);
+    current.ptr = src+MAX(0, i-1);
+    while (c != delim && c != 0 && i < len) {
+      current.length += 1;
+      c = src[i++];
+    }
+    out[count++] = current;
+
+    while (c == delim) {
+      c = src[i++];
+    }
+  }
+
+  *out_length = count;
+  return out_length > 0;
+}
