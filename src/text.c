@@ -306,3 +306,16 @@ int text_split(const char* src, char delim, TextView* out, int64_t* out_length) 
   *out_length = count;
   return out_length > 0;
 }
+
+int text_truncate(const char* value, const char* ending, int64_t limit, char* out) {
+  if (!value || !out) return 0;
+  ending = ending ? ending : "...";
+  int64_t end_length = strlen(ending);
+  int64_t actual_limit = limit - end_length;
+  if (actual_limit <= 0) return 0;
+  int64_t len = strlen(value);
+  if (len <= 0 || len < actual_limit) return 0;
+  memcpy(&out[0], &value[0], actual_limit * sizeof(char));
+  memcpy(&out[actual_limit], &ending[0], end_length * sizeof(char));
+  return 1;
+}

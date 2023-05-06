@@ -5,15 +5,14 @@
 
 int main(int argc, char* argv[]) {
   const char* txt = "InputEvent hello john doe InputEvent InputEvent sarah doe";
+  int64_t len = strlen(txt);
+  
+  char buff[len];
+  memset(&buff[0], 0, len*sizeof(char));
 
-  char* replaced = text_replace_all(txt, "InputEvent", "OtherText");
-
-  if (replaced) {
-    printf("%s\n", replaced);
-
-    free(replaced);
-    replaced = 0;
+  if (text_truncate(txt, "...", 9, buff)) {
+    printf("%s\n", buff);
   }
-
+  
   return 0;
 }

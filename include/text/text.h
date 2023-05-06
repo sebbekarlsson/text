@@ -42,6 +42,9 @@ int text_with_line_numbers(char** str);
 int64_t text_count_lines(const char* str);
 void text_shift_right(char* str, int64_t len, char c);
 
-bool text_compare_fuzzy(const char* a, const char* b);
+bool text_compare_fuzzy(const char *a, const char *b);
+
+
+int text_truncate(const char* value, const char* ending, int64_t limit, char* out);
 
 #endif
