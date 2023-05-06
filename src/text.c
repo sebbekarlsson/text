@@ -90,6 +90,44 @@ char* text_replace(const char *str, const char *pattern,
   return new_str;
 }
 
+
+#define TEXT_REPLACE_ALL_MAX_ITER 1024
+
+char* text_replace_all(const char *str, const char *pattern,
+                         const char *repl) {
+  if (!str || !pattern || !repl) return 0;
+
+  char* new_str = text_replace(str, pattern, repl);
+  if (!new_str) return 0;
+
+  if (strstr(new_str, pattern) != 0) {
+    int iterations = 0;
+    while (true) {
+      char* next_str = text_replace(new_str, pattern, repl);
+      if (next_str == 0) {
+	return new_str;
+      }
+
+      free(new_str);
+
+      if (strstr(next_str, pattern) == 0) {
+	return next_str;
+      }
+
+      new_str = next_str;
+
+      if (iterations >= TEXT_REPLACE_ALL_MAX_ITER) {
+	return new_str;
+      }
+
+      iterations++;
+    }
+  }
+  
+
+  return new_str;
+}
+
 int text_replace_char(char** str, char pattern, char repl) {
   if (!str || !pattern || !repl) return 0;
   char* value = *str;

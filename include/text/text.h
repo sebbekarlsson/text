@@ -30,6 +30,10 @@ int text_slice_at(const char* str, uint64_t pos, TextSlice* slice);
 char* text_replace(const char* str, const char* pattern,
                          const char* repl);
 
+
+char* text_replace_all(const char* str, const char* pattern,
+                         const char* repl);
+
 int text_replace_char(char** str, char pattern, char repl);
 
 
