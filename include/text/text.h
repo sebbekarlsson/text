@@ -45,6 +45,9 @@ void text_shift_right(char* str, int64_t len, char c);
 bool text_compare_fuzzy(const char *a, const char *b);
 
 
-int text_truncate(const char* value, const char* ending, int64_t limit, char* out);
+int text_truncate(const char *value, const char *ending, int64_t limit,
+                  char *out);
+
+int text_suffix(const char* value, const char* suffix, char* out, int64_t capacity);
 
 #endif

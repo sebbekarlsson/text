@@ -319,3 +319,23 @@ int text_truncate(const char* value, const char* ending, int64_t limit, char* ou
   memcpy(&out[actual_limit], &ending[0], end_length * sizeof(char));
   return 1;
 }
+
+int text_suffix(const char *value, const char *suffix, char *out,
+                int64_t capacity) {
+  if (!value || !out || capacity <= 0) return 0;
+
+  memset(&out[0], 0, capacity * sizeof(char));
+
+  int64_t value_length = strlen(value);
+  int64_t suffix_length = suffix == 0 ? 0 : strlen(suffix);
+
+  if (value_length + suffix_length >= capacity) return 0;
+
+  memcpy(&out[0], &value[0], value_length * sizeof(char));
+
+  if (suffix != 0) {
+    memcpy(&out[value_length], &suffix[0], suffix_length * sizeof(char));
+  }
+
+  return 1;
+}
