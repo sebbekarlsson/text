@@ -5,9 +5,15 @@
 
 int main(int argc, char* argv[]) {
   char tmp[256];
-  if (!text_suffix("gAlbedo", 0, tmp, 256)) {
-    printf("bad\n");
-  }
+  memset(&tmp[0], 0, 256*sizeof(char));
+
+  text_replace_chars("hello world this is cool {test}", (TextCharTuple[]){
+      {' ', '_'},
+      {'{', '-'},
+      {'}', '-'}
+    }, 3, tmp);
+  
   printf("%s\n", tmp);
+  
   return 0;
 }

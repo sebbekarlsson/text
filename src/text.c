@@ -144,6 +144,28 @@ int text_replace_char(char** str, char pattern, char repl) {
   return 1;
 }
 
+int text_replace_chars(const char *input_str, TextCharTuple *replacements,
+                       int n_replacements, char *out) {
+  if (input_str == 0 || replacements == 0 || n_replacements <= 0 || out == 0) return 0;
+
+  int64_t len = strlen(input_str);
+  if (len <= 0) return 0;
+
+  for (int64_t i = 0; i < len; i++) {
+    char c = input_str[i];
+    for (int j = 0; j < n_replacements; j++) {
+      TextCharTuple t = replacements[j];
+      if (c == t.a) {
+        c = t.b;
+      }
+    }
+    out[i] = c;
+  }
+  
+  return 1;
+}
+
+
 int64_t text_count_lines(const char* str) {
   if (!str) return 0;
 

@@ -16,6 +16,11 @@ typedef struct {
   int64_t length;
 } TextView;
 
+typedef struct {
+  char a;
+  char b;
+} TextCharTuple;
+
 const char *text_view_get_value(TextView *view);
 
 void text_view_clear(TextView* view);
@@ -36,6 +41,7 @@ char* text_replace_all(const char* str, const char* pattern,
 
 int text_replace_char(char** str, char pattern, char repl);
 
+int text_replace_chars(const char* input_str, TextCharTuple* replacements, int n_replacements, char* out);
 
 int text_with_line_numbers(char** str);
 
