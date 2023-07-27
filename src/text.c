@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 
 
 int text_append(char **inputstr, const char *other) {
@@ -357,6 +358,17 @@ int text_suffix(const char *value, const char *suffix, char *out,
 
   if (suffix != 0) {
     memcpy(&out[value_length], &suffix[0], suffix_length * sizeof(char));
+  }
+
+  return 1;
+}
+
+int text_to_lowercase(const char* value, char* out, int64_t length, int64_t capacity) {
+  if (value == 0 || out == 0 || length <= 0) return 0;
+  if (length >= capacity) return 0;
+
+  for (int64_t i = 0; i < length; i++) {
+    out[i] = tolower((unsigned char)value[i]);
   }
 
   return 1;

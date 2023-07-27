@@ -54,6 +54,9 @@ bool text_compare_fuzzy(const char *a, const char *b);
 int text_truncate(const char *value, const char *ending, int64_t limit,
                   char *out);
 
-int text_suffix(const char* value, const char* suffix, char* out, int64_t capacity);
+int text_suffix(const char *value, const char *suffix, char *out,
+                int64_t capacity);
+
+int text_to_lowercase(const char* value, char* out, int64_t length, int64_t capacity);
 
 #endif

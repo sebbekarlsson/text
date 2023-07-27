@@ -7,13 +7,12 @@ int main(int argc, char* argv[]) {
   char tmp[256];
   memset(&tmp[0], 0, 256*sizeof(char));
 
-  text_replace_chars("hello world this is cool {test}", (TextCharTuple[]){
-      {' ', '_'},
-      {'{', '-'},
-      {'}', '-'}
-    }, 3, tmp);
-  
+  const char* hello = "HELLO_WORLD_123";
+
+  text_to_lowercase(hello, tmp, strlen(hello), 256-1);
+
   printf("%s\n", tmp);
+  
   
   return 0;
 }
