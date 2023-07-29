@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <limits.h>
 
 
 int text_append(char **inputstr, const char *other) {
@@ -369,7 +370,7 @@ int text_suffix(const char *value, const char *suffix, char *out,
 
 int text_to_lowercase(const char* value, char* out, int64_t length, int64_t capacity) {
   if (value == 0 || out == 0 || length <= 0) return 0;
-  if (length >= capacity) return 0;
+  if (length > capacity) return 0;
 
   for (int64_t i = 0; i < length; i++) {
     out[i] = tolower((unsigned char)value[i]);
@@ -426,3 +427,65 @@ TextToken *text_tokenizer_next(TextTokenizer *tokenizer) {
   
   return token;
 }
+
+
+static int64_t get_next_lowercase_chunk(const char **buff_ptr, int64_t buff_len, char *out, int64_t capacity) {
+  if (buff_ptr == 0) return 0;
+  const char* buff = *buff_ptr;
+  if (buff == 0 || out == 0 || capacity <= 0 || buff_len <= 0 || buff[0] == 0) return 0;
+
+  int64_t min_len = MIN(buff_len, capacity);
+  if (min_len <= 0) return 0;
+  
+  memset(&out[0], 0, capacity*sizeof(char));
+  if (!text_to_lowercase(&buff[0], &out[0], buff_len, capacity)) return 0;
+
+  buff += min_len;
+
+  return buff != 0;
+}
+
+#define TEXT_INCLUDES_CAP PATH_MAX
+
+bool text_includes(const char *haystack, const char *needle,
+                   bool case_insensitive) {
+  if (haystack == 0 || needle == 0) return false;
+  if (haystack == needle) return true;
+  
+  
+  if (!case_insensitive) {
+    return strstr(haystack, needle) != 0;
+  }
+
+  int64_t len_haystack = strlen(haystack);
+  int64_t len_needle = strlen(needle);
+
+  if (len_needle > len_haystack || len_needle >= TEXT_INCLUDES_CAP) return false;
+
+  char needle_lower[TEXT_INCLUDES_CAP] = {0};
+  if (!text_to_lowercase(needle, needle_lower, len_needle, TEXT_INCLUDES_CAP-1)) return false;
+  
+  char chunk[TEXT_INCLUDES_CAP] = {0};
+  int64_t n_chars_left = strlen(haystack);
+
+  const char* haystack_ptr = &haystack[0];
+
+  while (haystack_ptr != 0 && n_chars_left > 0 && haystack_ptr[0] != 0) {
+    int64_t len = strlen(haystack_ptr);
+    int64_t min_len = MIN(len, (TEXT_INCLUDES_CAP-1));
+    
+    if (min_len <= 0) return false;
+    memset(&chunk[0], 0, TEXT_INCLUDES_CAP*sizeof(char));
+    if (!text_to_lowercase(haystack_ptr, chunk, min_len, TEXT_INCLUDES_CAP-1)) return false;
+
+
+    if (strstr(chunk, needle_lower) != 0) return true;
+    
+    haystack_ptr += min_len;
+    n_chars_left = len;
+  }
+
+  return false;
+}
+
+#undef TEXT_INCLUDES_CAP

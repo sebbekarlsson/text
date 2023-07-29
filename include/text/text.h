@@ -80,6 +80,8 @@ typedef struct {
 TextTokenizer text_tokenizer_init(const char *value, char delim);
 
 
-TextToken* text_tokenizer_next(TextTokenizer* tokenizer);
+TextToken *text_tokenizer_next(TextTokenizer *tokenizer);
+
+bool text_includes(const char* haystack, const char* needle, bool case_insensitive);
 
 #endif
