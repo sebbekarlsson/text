@@ -67,6 +67,8 @@ int text_to_lowercase(const char *value, char *out, int64_t length,
                       int64_t capacity);
 
 
+bool text_is_all_digits(const char* value, int64_t length);
+
 typedef struct {
   TextToken token;
   char delim;

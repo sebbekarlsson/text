@@ -378,6 +378,16 @@ int text_to_lowercase(const char* value, char* out, int64_t length, int64_t capa
   return 1;
 }
 
+bool text_is_all_digits(const char* value, int64_t length) {
+  if (value == 0 || length <= 0) return false;
+
+  for (int64_t i = 0; i < length; i++) {
+    if (!isdigit(value[i])) return false;
+  }
+
+  return true;
+}
+
 TextTokenizer text_tokenizer_init(const char *value, char delim) {
   if (value == 0 || delim == 0) return (TextTokenizer){0};
   int64_t len = strlen(value);
@@ -402,7 +412,6 @@ TextToken *text_tokenizer_next(TextTokenizer *tokenizer) {
 
   char c = tokenizer->buff[tokenizer->i];
   if (c == 0) return 0;
-
 
   token->ptr = &tokenizer->buff[tokenizer->i];
 

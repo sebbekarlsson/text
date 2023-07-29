@@ -20,6 +20,8 @@ int main(int argc, char* argv[]) {
     
     printf("%s\n", tmp);
   }
-  
+
+  const char* digit_text = "198278 F"; 
+  printf("all_digits: %d\n", text_is_all_digits(digit_text, strlen(digit_text)));
   return 0;
 }
