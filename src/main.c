@@ -7,12 +7,19 @@ int main(int argc, char* argv[]) {
   char tmp[256];
   memset(&tmp[0], 0, 256*sizeof(char));
 
-  const char* hello = "HELLO_WORLD_123";
+  const char* hello = "HELLO_WORLD_123_THIS_IS_A_STRING";
 
-  text_to_lowercase(hello, tmp, strlen(hello), 256-1);
+  TextTokenizer tokenizer = text_tokenizer_init(hello, '_');
 
-  printf("%s\n", tmp);
-  
+
+  TextToken* tok = 0;
+
+  while ((tok = text_tokenizer_next(&tokenizer))) {
+    char tmp[256] = {0};
+    memcpy(&tmp[0], tok->ptr, tok->length);
+    
+    printf("%s\n", tmp);
+  }
   
   return 0;
 }

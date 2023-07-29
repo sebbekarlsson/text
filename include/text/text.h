@@ -21,6 +21,12 @@ typedef struct {
   char b;
 } TextCharTuple;
 
+typedef struct {
+  const char* ptr;
+  int64_t length;
+} TextToken;
+
+
 const char *text_view_get_value(TextView *view);
 
 void text_view_clear(TextView* view);
@@ -57,6 +63,21 @@ int text_truncate(const char *value, const char *ending, int64_t limit,
 int text_suffix(const char *value, const char *suffix, char *out,
                 int64_t capacity);
 
-int text_to_lowercase(const char* value, char* out, int64_t length, int64_t capacity);
+int text_to_lowercase(const char *value, char *out, int64_t length,
+                      int64_t capacity);
+
+
+typedef struct {
+  TextToken token;
+  char delim;
+  int64_t length;
+  int64_t i;
+  const char* buff;
+} TextTokenizer;
+
+TextTokenizer text_tokenizer_init(const char *value, char delim);
+
+
+TextToken* text_tokenizer_next(TextTokenizer* tokenizer);
 
 #endif

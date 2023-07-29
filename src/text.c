@@ -285,6 +285,10 @@ bool text_compare_fuzzy(const char* a, const char* b) {
 
 const char *text_view_get_value(TextView *view) {
   if (!view || view->ptr == 0 || view->length <= 0) return 0;
+  if (view->length >= TEXT_VIEW_CAP-1) {
+    fprintf(stderr, "(text): Not enough space in temporary buffer.\n");
+    return 0;
+  }
   memset(&view->tmp, 0, TEXT_VIEW_CAP * sizeof(char));
   memcpy(&view->tmp[0], view->ptr, view->length * sizeof(char));
   return view->tmp;
@@ -372,4 +376,44 @@ int text_to_lowercase(const char* value, char* out, int64_t length, int64_t capa
   }
 
   return 1;
+}
+
+TextTokenizer text_tokenizer_init(const char *value, char delim) {
+  if (value == 0 || delim == 0) return (TextTokenizer){0};
+  int64_t len = strlen(value);
+  if (len <= 0) return (TextTokenizer){0};
+  return (TextTokenizer){
+    .buff = value,
+    .delim = delim,
+    .i = 0,
+    .length = len,
+    .token = (TextToken){ .ptr = value, .length = 0 }
+  };
+}
+
+
+TextToken *text_tokenizer_next(TextTokenizer *tokenizer) {
+  if (tokenizer == 0 || tokenizer->length <= 0 || tokenizer->buff == 0 || tokenizer->delim == 0) return 0;
+  TextToken* token = &tokenizer->token;
+  token->length = 0;
+  token->ptr = 0;
+
+  if (tokenizer->i >= tokenizer->length) return 0;
+
+  char c = tokenizer->buff[tokenizer->i];
+  if (c == 0) return 0;
+
+
+  token->ptr = &tokenizer->buff[tokenizer->i];
+
+
+  while (tokenizer->i < tokenizer->length && c != 0) {
+    c = tokenizer->buff[tokenizer->i++];
+    if (c == tokenizer->delim || c == 0) break;
+    token->length += 1;
+  }
+
+  if (token->ptr == 0 || token->length <= 0) return 0;
+  
+  return token;
 }
