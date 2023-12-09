@@ -490,30 +490,28 @@ bool text_includes(const char *haystack, const char *needle,
 
 #undef TEXT_INCLUDES_CAP
 
-int text_trim_right_in_place(char* value, char unwanted_char) {
-  if (!value) return 0;
-  int64_t len = strlen(value);
-  int64_t cut_start = 0;
-  int64_t i = len-1;
-  char c = value[i--];
-  while (c == unwanted_char) {
-    cut_start = i;
-    c = value[i--];
+static int trim_right(char *str) {
+  int len = strlen(str);
+
+  while(len > 0 && isspace((unsigned char) str[len - 1])) {
+    len--;
   }
 
-  if (cut_start+1 >= len) return 0;
-  
-  value[cut_start+1] = '\0';
-  printf("%ld %ld\n", len, cut_start);
-  
+  str[len] = '\0';
 
   return 1;
 }
 
-char* text_trim_right(const char* value, char unwanted_char) {
+int text_trim_right_in_place(char* value) {
+  if (!value) return 0;
+  trim_right(value);
+  return 1;
+}
+
+char* text_trim_right(const char* value) {
   if (value == 0) return 0;
   char* new_value = strdup(value);
   if (new_value == 0) return 0;
-  if (!text_trim_right_in_place(new_value, unwanted_char)) return 0;
+  if (!text_trim_right_in_place(new_value)) return 0;
   return new_value;
 }

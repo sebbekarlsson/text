@@ -29,9 +29,9 @@ typedef struct {
 
 const char *text_view_get_value(TextView *view);
 
-int text_trim_right_in_place(char* value, char unwanted_char);
+int text_trim_right_in_place(char* value);
 
-char* text_trim_right(const char* value, char unwanted_char);
+char* text_trim_right(const char* value);
 
 void text_view_clear(TextView* view);
 
