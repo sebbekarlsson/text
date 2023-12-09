@@ -490,10 +490,13 @@ bool text_includes(const char *haystack, const char *needle,
 
 #undef TEXT_INCLUDES_CAP
 
+
+
+
 static int trim_right(char *str) {
   int len = strlen(str);
 
-  while(len > 0 && isspace((unsigned char) str[len - 1])) {
+  while(len > 0 && (isspace(str[len - 1]) || str[len - 1] > 127)) {
     len--;
   }
 
