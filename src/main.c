@@ -7,13 +7,12 @@ int main(int argc, char* argv[]) {
   char tmp[256];
   memset(&tmp[0], 0, 256*sizeof(char));
 
-  const char* haystack = "hello world, my name is john doe. I like Apples and bananas.wav";
-  const char* needle = "apples";
+  const char* stuff = ("hello this is           something               ");
 
+  char* trimmed =text_trim_right(stuff, ' ');
 
-  if (text_includes(haystack, needle, true)) {
-    printf("yes\n");
-  }
-  
+  printf("(%s)\n", trimmed);
+
+  free(trimmed);
   return 0;
 }
